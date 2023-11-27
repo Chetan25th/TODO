@@ -27,7 +27,7 @@ function addcard() {
         issinglecard = false
     }
     if (issinglecard) {
-        back3()
+        back2()
         issinglecard = false
     }
     notask.classList.add('hide')
@@ -53,7 +53,8 @@ function addcard() {
     cardname.value = ""
     card.classList.add('card')
     additem.innerText = "+"
-    deletebutton.innerText = "-"
+    deletebutton.innerText = "x"
+
 
     // craete the class 
     cardheading.classList.add('cardheading')
@@ -120,7 +121,7 @@ function addcard() {
             itemlist.appendChild(item)
 
             additempopup.innerText = ""
-            // given the class
+            // given the cklass
             itemtext.classList.add('itemtext')
             markdone.classList.add('markdone')
             //  markdone button
@@ -143,29 +144,29 @@ function addcard() {
 
     })
 
+
     cardheading.addEventListener('click', () => {
         issinglecard = true
         navbar.classList.add('hide')
         mainheading.classList.add('hide')
         singlecard.classList.remove('hide')
         cardcontainer.classList.add('hide')
-
         let copycardheading = cardheading.cloneNode(true)
         singlecard.appendChild(copycardheading)
-
         copycardheading.classList.add('copycardheading')
         let copycard = card.cloneNode(true)
-
         singlecard.appendChild(copycard)
         copycard.classList.add('copycard')
         copycard.lastElementChild.addEventListener('click', () => {
             card.remove()
             copycard.remove()
-            // back().remove
+            back().remove
+            copycardheading.remove()
             if (cardcontainer.innerText == "")
                 notask.classList.remove('hide')
 
         })
+
         copycard.lastElementChild.previousElementSibling.addEventListener('click', () => {
 
             additempopup.classList.remove('hide')
@@ -216,6 +217,7 @@ function addcard() {
 
                 additempopup.innerText = ""
 
+                // given the cklass
                 itemtext.classList.add('itemtext')
                 markdone.classList.add('markdone')
                 //  markdone button
@@ -228,26 +230,59 @@ function addcard() {
                         markdone.classList.remove('hide')
                     })
                 })
-
                 if (issinglecard) {
-                    let copyitem= item.cloneNode(true);
-                    copyitem.appendChild(copyitem);
-                    copyaddbutton.addEventListener("click", function () {
-                        itemtext.classList.add("markdone");
-                        markdone.style.display = "none";
-                   
-                    })
+                    // Clone the individual item
+                    let copyitem = item.cloneNode(true);
+                    copycard.querySelector('.itemlist').appendChild(copyitem);
+     
+                    let copyitemtext = copyitem.querySelector('.itemtext');
+                let copymarkdone = copyitem.querySelector('.markdone');
+
+                    copymarkdone.addEventListener('click', () => {
+                        copyitemtext.classList.add('itemtextline');
+                        copymarkdone.classList.add('hide');
+               
+                        // Attach a new event listener to the cloned itemtext for toggling
+                        copyitemtext.addEventListener('click', () => {
+                            copyitemtext.classList.remove('itemtextline');
+                            copymarkdone.classList.remove('hide');
+                        });
+                    });  
                 }
+
             })
 
             closebutton.addEventListener('click', () => {
                 parent.classList.remove('blur')
                 additempopup.classList.add('hide')
                 addbutton.remove()
+                copycardheading.classList.remove('copycardheading')
             })
 
+
+            // parent.firstElementChild.classList.remove('hide')
         })
-         
+
+         //markdone logic 
+            // let copyitemtext = copyitem.querySelector('.itemtext');
+            let copymarkdone = copycard.querySelectorAll('.markdone');
+
+
+                console.log(copymarkdone)
+            // Attach a new event listener to the cloned markdone button
+            copymarkdone.forEach((copymarkdoneButton) => {
+                copymarkdoneButton.addEventListener('click', () => {
+                    copymarkdoneButton.previousElementSibling.classList.add('itemtextline');
+                    copymarkdoneButton.classList.add('hide');
+
+                    // Attach a new event listener to the cloned itemtext for toggling
+                    copymarkdoneButton.previousElementSibling.addEventListener('click', () => {
+                        copymarkdoneButton.previousElementSibling.classList.remove('itemtextline');
+                        copymarkdoneButton.classList.remove('hide');
+                    });
+                });
+            });
+
         parent.firstElementChild.classList.remove('hide')
 
     })
